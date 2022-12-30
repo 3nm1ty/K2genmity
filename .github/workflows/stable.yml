@@ -2,7 +2,7 @@ name: Create a stable release
 on:
   push:
     tags:
-       - '*'
+      - '*'
   pull_request:
     tags:
       - '*'
@@ -17,6 +17,11 @@ jobs:
         with:
           ref: 'main'
           submodules: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
 
       - name: Check cache
         id: verify-cache
@@ -34,18 +39,22 @@ jobs:
         uses: Randomblock1/theos-action@v1
 
       - name: Prepare Azule
-        run : |
+        run: |
           git clone https://github.com/Al4ise/Azule ${{ github.workspace }}/Azule
 
       - name: Prepare Enmity Patcher
-        run : |
+        run: |
           curl -L https://github.com/enmity-mod/patcher/releases/latest/download/patcher.mac-amd64 -o ${{ github.workspace }}/patcher
           chmod +x patcher
 
       - name: Patch Discord
-        run : |
+        run: |
           ${{ github.workspace }}/patcher
           mkdir out
+
+      - name: Patch Info.plist
+        run: |
+          python ipa_patcher.py
 
       - name: Build package
         run: |
@@ -54,7 +63,7 @@ jobs:
           mv $(find packages -name "*.deb" -print -quit) out/K2genmity.deb
 
       - name: Create Enmity.ipa
-        run : |
+        run: |
           ${{ github.workspace }}/Azule/azule -i Enmity.ipa -o out -f out/K2genmity.deb
           mv out/Enmity+K2genmity.deb.ipa out/K2genmity.ipa
 
@@ -67,7 +76,7 @@ jobs:
           mv $(find packages -name "*.deb" -print -quit) out/K2genmity.Development.deb
 
       - name: Create Enmity.Dev.ipa
-        run : |
+        run: |
           ${{ github.workspace }}/Azule/azule -i Enmity.ipa -o out -f out/K2genmity.Development.deb
           mv out/Enmity+K2genmity.Development.deb.ipa out/K2genmity.Development.ipa
 
@@ -75,5 +84,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ github.ref_name }}
-          files:  |
+          files: |
             out/*
