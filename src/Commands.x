@@ -277,15 +277,15 @@ void handleCommand(NSDictionary *command) {
 
 %end
 
-%hook NSBundle
-
-- (NSDictionary *)infoDictionary {
-    NSMutableDictionary *infoPlistDict = %orig.mutableCopy;
-    // Add NSFaceIDUsageDescription if it doesn't have
-    if ([infoPlistDict objectForKey:@"NSFaceIDUsageDescription"] == nil){
-        [infoPlistDict setValue:@"K2genmity" forKey:@"NSFaceIDUsageDescription"];
-    }
-    return infoPlistDict.copy;
-}
-
-%end
+// %hook NSBundle
+//
+// - (NSDictionary *)infoDictionary {
+//     NSMutableDictionary *infoPlistDict = %orig.mutableCopy;
+//     // Add NSFaceIDUsageDescription if it doesn't have
+//     if ([infoPlistDict objectForKey:@"NSFaceIDUsageDescription"] == nil){
+//         [infoPlistDict setValue:@"K2genmity" forKey:@"NSFaceIDUsageDescription"];
+//     }
+//     return infoPlistDict.copy;
+// }
+//
+// %end
