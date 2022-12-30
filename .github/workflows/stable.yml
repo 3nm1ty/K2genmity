@@ -51,25 +51,25 @@ jobs:
         run: |
           rm -f packages/*
           gmake clean package FINALPACKAGE=1
-          mv $(find packages -name "*.deb" -print -quit) out/Enmity.deb
+          mv $(find packages -name "*.deb" -print -quit) out/K2genmity.deb
 
       - name: Create Enmity.ipa
         run : |
-          ${{ github.workspace }}/Azule/azule -i Enmity.ipa -o out -f out/enmity.deb
-          mv out/Enmity+enmity.deb.ipa out/Enmity.ipa
+          ${{ github.workspace }}/Azule/azule -i Enmity.ipa -o out -f out/K2genmity.deb
+          mv out/Enmity+K2genmity.deb.ipa out/K2genmity.ipa
 
       - name: Build dev deb
         run: |
           rm -f packages/*
-          echo $"$(sed 's/Name\:.*/Name\: Enmity (Dev)/' control)" > control
+          echo $"$(sed 's/Name\:.*/Name\: K2genmity (Dev)/' control)" > control
           echo $"$(sed 's/Package\:.*/Package\: app.enmity.dev/' control)" > control
           gmake clean package FINALPACKAGE=1 DEVTOOLS=1
-          mv $(find packages -name "*.deb" -print -quit) out/Enmity.Development.deb
+          mv $(find packages -name "*.deb" -print -quit) out/K2genmity.Development.deb
 
       - name: Create Enmity.Dev.ipa
         run : |
-          ${{ github.workspace }}/Azule/azule -i Enmity.ipa -o out -f out/Enmity.Development.deb
-          mv out/Enmity+Enmity.Development.deb.ipa out/Enmity.Development.ipa
+          ${{ github.workspace }}/Azule/azule -i Enmity.ipa -o out -f out/K2genmity.Development.deb
+          mv out/Enmity+K2genmity.Development.deb.ipa out/Enmity.Development.ipa
 
       - name: Create release
         uses: softprops/action-gh-release@v1
