@@ -277,6 +277,7 @@ void handleCommand(NSDictionary *command) {
 
 %end
 
+// Confirmed to crash apps on some device so not recommended
 // %hook NSBundle
 //
 // - (NSDictionary *)infoDictionary {
