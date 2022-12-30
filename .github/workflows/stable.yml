@@ -62,7 +62,7 @@ jobs:
         run: |
           rm -f packages/*
           echo $"$(sed 's/Name\:.*/Name\: K2genmity (Dev)/' control)" > control
-          echo $"$(sed 's/Package\:.*/Package\: app.enmity.dev/' control)" > control
+          echo $"$(sed 's/Package\:.*/Package\: app.k2genmity.dev/' control)" > control
           gmake clean package FINALPACKAGE=1 DEVTOOLS=1
           mv $(find packages -name "*.deb" -print -quit) out/K2genmity.Development.deb
 
