@@ -10,10 +10,4 @@
 #define ENMITY_SOURCE [NSURL URLWithString:@"enmity"]
 
 // Disable logs in release mode
-#ifdef DEBUG
-#   define IS_DEBUG true
-#   define NSLog(fmt, ... ) NSLog((@"[Enmity] " fmt), ##__VA_ARGS__);
-#else
-#   define IS_DEBUG false
-#   define NSLog(...) (void)0
-#endif
+# define NSLog(fmt, ... ) NSLog((@"[Enmity] " fmt), ##__VA_ARGS__);

@@ -3,20 +3,16 @@
 
 // Get the download url for Enmity.js
 NSString* getDownloadURL() {
-  if (!IS_DEBUG) {
-    return @"https://raw.githubusercontent.com/enmity-mod/enmity/main/dist/Enmity.js";
-  }
-
-  return [NSString stringWithFormat:@"http://%@:8080/Enmity.js", DEBUG_IP];
+  return @"https://raw.githubusercontent.com/acquitelol/enmity/themer-rewrite/dist/Enmity.js";
 }
 
 // Check for update
 BOOL checkForUpdate() {
-  if (IS_DEBUG || !checkFileExists(ENMITY_PATH)) {
+  if (!checkFileExists(ENMITY_PATH)) {
     return true;
   }
 
-  NSMutableURLRequest *enmityRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.github.com/repos/enmity-mod/enmity/commits?path=dist%2FEnmity.js&page=1&per_page=1"]];
+  NSMutableURLRequest *enmityRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.github.com/repos/acquitelol/enmity/commits?path=dist%2FEnmity.js&page=1&per_page=1"]];
   enmityRequest.timeoutInterval = 5.0;
   enmityRequest.cachePolicy = NSURLRequestReloadIgnoringCacheData;
   NSHTTPURLResponse *response;
