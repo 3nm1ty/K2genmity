@@ -1,9 +1,9 @@
 Package: app.k2genmity
 Name: K2genmity
-Version: 1.0.0
+Version: 2.1.8
 Architecture: iphoneos-arm
 Description: The power of addons, all in your hand.
-Maintainer: Zoey, eternal
+Maintainer: mafu, Rosie
 Author: Enmity Team
 Section: Tweaks
 Depends: mobilesubstrate (>= 0.9.5000)
