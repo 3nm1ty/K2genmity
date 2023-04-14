@@ -46,6 +46,8 @@ jobs:
       - name: Prepare Azule
         run: |
           git clone https://github.com/Al4ise/Azule ${{ github.workspace }}/Azule
+          cd Azule
+          git checkout 27c02b415cff15b1c131a0e95bcc2438023f86da
 
       - name: Prepare Enmity Patcher
         run: |
@@ -61,16 +63,15 @@ jobs:
         run: |
           python ipa_patcher.py
 
-      - name: Build package
+      - name: Retrieve version
+        id: version
+        run: echo "::set-output name=__ENMITY_VERSION::$(cat control | grep -E 'Version:(.*)' | awk '{ print $2 }')"   
+
+      - name: Build deb
         run: |
           rm -f packages/*
           gmake clean package FINALPACKAGE=1
           mv $(find packages -name "*.deb" -print -quit) out/K2genmity.deb
-
-      - name: Create Enmity.ipa
-        run: |
-          ${{ github.workspace }}/Azule/azule -i $PWD/Enmity.ipa -o $PWD/out -f $PWD/out/K2genmity.deb
-          mv out/Enmity+K2genmity.deb.ipa out/K2genmity.ipa
 
       - name: Build dev deb
         run: |
@@ -80,9 +81,30 @@ jobs:
           gmake clean package FINALPACKAGE=1 DEVTOOLS=1
           mv $(find packages -name "*.deb" -print -quit) out/K2genmity.Development.deb
 
-      - name: Create Enmity.Dev.ipa
+      - name: Build rootless deb
         run: |
-          ${{ github.workspace }}/Azule/azule -i $PWD/Enmity.ipa -o $PWD/out -f $PWD/out/K2genmity.Development.deb
+          rm -f packages/*
+          echo $"$(sed 's/Name\:.*/Name\: K2genmity (Rootless)/' control)" > control
+          echo $"$(sed 's/Package\:.*/Package\: app.k2genmity.rootless/' control)" > control
+          gmake clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv $(find packages -name "*.deb" -print -quit) out/K2genmity.Rootless.deb
+
+      - name: Build dev rootless deb
+        run: |
+          rm -f packages/*
+          echo $"$(sed 's/Name\:.*/Name\: K2genmity (Rootless)/' control)" > control
+          echo $"$(sed 's/Package\:.*/Package\: app.k2genmity.rootless/' control)" > control
+          gmake clean package FINALPACKAGE=1 DEVTOOLS=1 THEOS_PACKAGE_SCHEME=rootless
+          mv $(find packages -name "*.deb" -print -quit) out/K2genmity.Rootless.Development.deb
+
+      - name: Create Enmity.ipa
+        run : |
+          ${{ github.workspace }}/Azule/azule -U -i Enmity.ipa -o out -f out/K2genmity.deb
+          mv out/Enmity+K2genmity.deb.ipa out/K2genmity.ipa
+
+      - name: Create Enmity.Dev.ipa
+        run : |
+          ${{ github.workspace }}/Azule/azule -U -i Enmity.ipa -o out -f out/K2genmity.Development.deb
           mv out/Enmity+K2genmity.Development.deb.ipa out/K2genmity.Development.ipa
 
       - name: Create release
@@ -90,6 +112,6 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
-          automatic_release_tag: v${{ github.ref_name }}
-          title: v${{ github.ref_name }}
+          automatic_release_tag: v${{ steps.version.outputs.__ENMITY_VERSION }}
+          title: "K2genmity v${{ steps.version.outputs.__ENMITY_VERSION }}"
           files: out/*
